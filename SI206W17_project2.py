@@ -1,8 +1,8 @@
 ## SI 206 W17 - Project 2 
 
 ## COMMENT HERE WITH:
-## Your name:
-## Anyone you worked with on this project:
+## Your name: Madi Atkins
+## Anyone you worked with on this project: Sindhu
 
 ## Below we have provided import statements, comments to separate out the parts of the project, instructions/hints/examples, and at the end, tests. See the PDF of instructions for more detail. 
 ## You can check out the SAMPLE206project2_caching.json for an example of what your cache file might look like.
@@ -14,7 +14,7 @@ import unittest
 import json
 import requests
 import tweepy
-import twitter_info # Requires you to have a twitter_info file in this directory
+import twitter_info 
 from bs4 import BeautifulSoup
 
 ## Tweepy authentication setup
@@ -26,13 +26,66 @@ access_token_secret = twitter_info.access_token_secret
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-# Set up to be able grab stuff from twitter with your authentication using Tweepy methods, and return it in a JSON format 
-api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
+# Set up to be able grab stuff from twitter with your authentication using Tweepy methods, and return it in a JSON format
+
 
 ## Part 0 -- CACHING SETUP
 
 ## Write the code to begin your caching pattern setup here.
 
+
+CACHE_FNAME = '206project2_caching.json' 
+
+try: 
+    cache_file = open(CACHE_FNAME, 'r') 
+    cache_contents = cache_file.read()
+    CACHE_DICTION = json.loads(cache_contents)
+    cache_file.close()
+except:
+	CACHE_DICTION = {}
+
+
+def getWithCachingUMSI():
+	response = requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All", headers ={'User-Agent': 'SI_CLASS'})
+	htmldoc = response.text
+	umsi_data = "umsi_directory_data"
+
+	if umsi_data in CACHE_DICTION:
+		response_text = CACHE_DICTION[umsi_data]
+	else:
+		CACHE_DICTION[umsi_data] = htmldoc
+		response_text = htmldoc
+
+		cache_file = open(CACHE_FNAME, "w")
+		cache_file.write(json.dumps(CACHE_DICTION))
+		cache_file.close()
+
+
+def getWithCachingTwitter(phrase):
+	api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
+	public_tweets = api.search(q=phrase)
+	twitter_phrase = "twitter_"+str(phrase)
+
+	if twitter_phrase in CACHE_DICTION:
+		print('using cache')
+		response_text = CACHE_DICTION[twitter_phrase]
+	else:
+		print('fetching')
+		CACHE_DICTION[twitter_phrase] = public_tweets
+		response_text = public_tweets
+
+		cache_file = open(CACHE_FNAME, 'w')
+		cache_file.write(json.dumps(CACHE_DICTION))
+		cache_file.close()
+
+	response_dictionary = response_text
+	return response_dictionary
+
+
+
+getWithCachingUMSI()
+getWithCachingTwitter("University of Michigan")
+#getWithCachingTwitter("Michigan State University")
 
 
 
