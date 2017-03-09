@@ -138,34 +138,34 @@ umsi_titles = getTitles(data)
 
 
 
-# def get_five_tweets(phrase):
-# 	text_twitter = []
-# 	api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
-# 	public_tweets = api.search(q=phrase)
-# 	twitter_phrase = "twitter_"+str(phrase)
+def get_five_tweets(phrase):
+	text_twitter = []
+	api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
+	public_tweets = api.search(q=phrase)
+	twitter_phrase = "twitter_"+str(phrase)
 
-# 	if twitter_phrase in CACHE_DICTION:
-# 		print('using cache')
-# 		response_text = CACHE_DICTION[twitter_phrase]
-# 	else:
-# 		print('fetching')
-# 		CACHE_DICTION[twitter_phrase] = public_tweets
-# 		response_text = public_tweets
+	if twitter_phrase in CACHE_DICTION:
+		print('using cache')
+		response_text = CACHE_DICTION[twitter_phrase]
+	else:
+		print('fetching')
+		CACHE_DICTION[twitter_phrase] = public_tweets
+		response_text = public_tweets
 
-# 		cache_file = open(CACHE_FNAME, 'w')
-# 		cache_file.write(json.dumps(CACHE_DICTION))
-# 		cache_file.close()
+		cache_file = open(CACHE_FNAME, 'w')
+		cache_file.write(json.dumps(CACHE_DICTION))
+		cache_file.close()
 
-# 	response_dictionary = response_text
-# 	tweeter = response_dictionary["statuses"]
-# 	for tweet in tweeter:
-# 		text_twitter.append(tweet["text"])
-# 	for item in text_twitter:
-# 		item.encode("utf-8")
-# 	return text_twitter[:5]
+	response_dictionary = response_text
+	tweeter = response_dictionary["statuses"]
+	for tweet in tweeter:
+		text_twitter.append(tweet["text"])
+	for item in text_twitter:
+		item.encode("utf-8")
+	return text_twitter[:5]
    
 
-# print (get_five_tweets("University of Michigan"))
+print (get_five_tweets("University of Michigan"))
 
 
 
