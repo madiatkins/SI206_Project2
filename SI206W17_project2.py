@@ -70,61 +70,61 @@ def find_urls(string):
 ## Reminder: you'll need to use the special header for a request to the UMSI site, like so:
 #### requests.get(base_url, headers={'User-Agent': 'SI_CLASS'}) 
 
-# def get_umsi_data():
-# 	umsi = []
-# 	for i in range(12):
-# 		url = "https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All&page={0}".format(i)
-# 		r = requests.get(url, headers = {'User-Agent': 'SI_CLASS'})
-# 		response = r.text
-# 		umsi.append(response)
+def get_umsi_data():
+	umsi = []
+	for i in range(12):
+		url = "https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All&page={0}".format(i)
+		r = requests.get(url, headers = {'User-Agent': 'SI_CLASS'})
+		response = r.text
+		umsi.append(response)
 
-# 	umsi_data = "umsi_directory_data"
+	umsi_data = "umsi_directory_data"
 
-# 	if umsi_data in CACHE_DICTION:
-# 		response_text = CACHE_DICTION[umsi_data]
-# 		return response_text
-# 	else:
-# 		CACHE_DICTION[umsi_data] = umsi
-# 		response_text = umsi
+	if umsi_data in CACHE_DICTION:
+		response_text = CACHE_DICTION[umsi_data]
+		return response_text
+	else:
+		CACHE_DICTION[umsi_data] = umsi
+		response_text = umsi
 
-# 		cache_file = open(CACHE_FNAME, "w")
-# 		cache_file.write(json.dumps(CACHE_DICTION))
-# 		cache_file.close()
-# 		return umsi
-
-
+		cache_file = open(CACHE_FNAME, "w")
+		cache_file.write(json.dumps(CACHE_DICTION))
+		cache_file.close()
+		return umsi
 
 
 
 
-# ## PART 2 (b) - Create a dictionary saved in a variable umsi_titles 
-# ## whose keys are UMSI people's names, and whose associated values are those people's titles, e.g. "PhD student" or "Associate Professor of Information"...
 
 
-# umsi_titles = {}
+## PART 2 (b) - Create a dictionary saved in a variable umsi_titles 
+## whose keys are UMSI people's names, and whose associated values are those people's titles, e.g. "PhD student" or "Associate Professor of Information"...
 
 
-# name_list = []
-# position_list = []
-
-# data = get_umsi_data()
-
-# def getTitles(data):
-# 	for item in data:
-# 		soup = BeautifulSoup(item,"html.parser")
-
-# 		for name in soup.find_all("div", attrs={"property": "dc:title"}):
-# 			n = name.contents[0].text
-# 			name_list.append(n)
-
-# 		for title in soup.find_all(attrs={"class": "field field-name-field-person-titles field-type-text field-label-hidden"}):
-# 			m = title.contents[0].text
-# 			position_list.append(m)
-# 	final = zip(name_list, position_list)
-# 	return (dict(final))
+umsi_titles = {}
 
 
-# umsi_titles = getTitles(data)
+name_list = []
+position_list = []
+
+data = get_umsi_data()
+
+def getTitles(data):
+	for item in data:
+		soup = BeautifulSoup(item,"html.parser")
+
+		for name in soup.find_all("div", attrs={"property": "dc:title"}):
+			n = name.contents[0].text
+			name_list.append(n)
+
+		for title in soup.find_all(attrs={"class": "field field-name-field-person-titles field-type-text field-label-hidden"}):
+			m = title.contents[0].text
+			position_list.append(m)
+	final = zip(name_list, position_list)
+	return (dict(final))
+
+
+umsi_titles = getTitles(data)
 
 
 
