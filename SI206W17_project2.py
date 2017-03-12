@@ -56,7 +56,7 @@ except:
 
 def find_urls(string):
 	x = []
-	x = re.findall("(https?://.*?.com|https?://.*?.uk)", string)
+	x = re.findall(r"https?:\/\/[A-Za-z0-9]+(?:\.+[a-zA-Z0-9]{2,})+", string)
 	return x
 
 
@@ -177,13 +177,15 @@ five_tweets = (get_five_tweets("University of Michigan"))
 ## PART 3 (c) - Iterate over the five_tweets list, invoke the find_urls function that you defined in Part 1 on each element of the list, and accumulate a new list of each of the total URLs in all five of those tweets in a variable called tweet_urls_found. 
 
 
-tweet_urls_found = []
+tweet_urls_found = ()
 
 for tweet in five_tweets:
-	for url in find_urls(tweet):
-		tweet_urls_found.append(url)
+		URL = (find_urls(tweet))
+		if URL:
+			tweet_urls_found = tweet_urls_found + tuple(URL)
 
-print(tweet_urls_found)
+
+print (tweet_urls_found)
 
 ########### TESTS; DO NOT CHANGE ANY CODE BELOW THIS LINE! ###########
 
